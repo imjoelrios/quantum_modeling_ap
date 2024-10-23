@@ -159,7 +159,6 @@ const SpinTraceEvolution = () => {
     console.log("magF_B:", mag_str);
     console.log("t2:", t2_str);
 
-    // TODO: Change this to the output when you run the python backend this piece -> http://127.0.0.1:3001
     let base_url = host + "/receive_data/evotrace"
     let final_url =
     base_url + "/" + gate_str +

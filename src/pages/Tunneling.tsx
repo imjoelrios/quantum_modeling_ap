@@ -151,7 +151,6 @@ const Tunneling = () => {
       wave_str = "1";
     }
 
-    // TODO: Change this to the output when you run the python backend this piece -> http://127.0.0.1:3001
     let base_url = host + "/receive_data/tunneling"
     let final_url =
     base_url + "/" + barrier_str +

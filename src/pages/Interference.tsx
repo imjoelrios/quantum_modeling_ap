@@ -144,7 +144,6 @@ const Interference = () => {
     console.log("slit_separation:", slit_separation_str);
     console.log("wave:", wave_str);
 
-    // TODO: Change this to the output when you run the python backend this piece -> http://127.0.0.1:3001
     let base_url = host + "/receive_data/interference";
     let final_url =
     base_url + "/" + spacing_str +

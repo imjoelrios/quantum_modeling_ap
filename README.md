@@ -47,9 +47,14 @@ Computational Nano Lab, UFL
     cd quantum_app_backend
     pip install -r requirements.txt 
     ```
-4. Run backend 
+4. Run backend locally
     ```
     python app.py
+    ```
+5. Run backend in Docker container
+    ```
+    docker build -t flask-backend .
+    docker run -p 3001:3001 flask-backend
     ```
 
 ### Running Locally 
