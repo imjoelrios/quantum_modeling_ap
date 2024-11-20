@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Card } from "@mui/material";
 
 const card_style = {
-  backgroundColor: "rgba(52, 52, 52, 0)",
+  backgroundColor: "#063970",
   border: "1px solid #FFFFFF",
   margin: "2%",
   boxShadow: "0 0 5px -1px rgba(0,0,0,0.2)",
@@ -12,7 +12,7 @@ const card_style = {
 // ==========================================
 // ==============  CustomTitle ==============
 // ==========================================
-const CustomTitle = () => {
+const CustomTitle = ({pageName = "Quantum"}) => {
   return (
     <div>
       <Link to="/" style={{ textDecoration: "none" }}>
@@ -22,27 +22,26 @@ const CustomTitle = () => {
               style={{
                 color: "#FFFFFF",
                 fontWeight: "bolder",
-                paddingTop: "3%",
-                paddingBottom: "3%",
+                paddingTop: "5%",
                 margin: 0,
               }}
             >
-              Quantum Modeling App
+              {pageName} Model Generator
             </h2>
           </p>
         </Card>
       </Link>
-      <h5
+      <h4
         style={{
-          color: "#FFFFFF",
+          color: "#000000",
           textAlign: "center",
-          paddingTop: "3%", 
-          paddingBottom: "3%",
+          paddingTop: "3%",
           margin: 0,
+          fontSize: 16,
         }}
       >
-        Select the values for the model and press Generate Model when you're ready!
-      </h5>
+        Select the values for the model and click Generate Model when you're ready!
+      </h4>
     </div>
   );
 };

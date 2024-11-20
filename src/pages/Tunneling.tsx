@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 // === UI Components ===
 import {
-  Grid,
   Box,
   Button,
   Stack,
@@ -11,13 +10,14 @@ import {
   InputLabel,
   FormControl,
   Slider,
-  Typography
+  Typography,
+  CardContent,
+  Card
 } from "@mui/material";
 import CircularProgress from '@mui/joy/CircularProgress';
 import { Layout } from "antd";
 import "antd/dist/antd.min.css";
 import host from "../setup/host";
-
 
 // === Custom Components ===
 import {
@@ -181,150 +181,172 @@ const Tunneling = () => {
 
   // ========= return =========
   return (
-    <div>
-      <Layout style={{ minHeight: "100vh" }}>
-        {/* ======================== Sider ======================== */}
-        <Sider
-          // collapsible
-          // collapsed={collapsed}
-          // onCollapse={(value) => setCollapsed(value)}
-          style={{ padding: "1%" }}
-          width={230}
-        >
-          <CustomTitle />
+    <Layout 
+        style={{ 
+            minHeight: "100vh", 
+            display: "flex", 
+            justifyContent: "center", 
+            alignItems: "center" }}>
 
-          <Box
-            component="form"
-            sx={{
-              "& > :not(style)": { m: 0.5, width: "25ch" },
-            }}
-            noValidate
-            autoComplete="off"
-            style={horizontal_center}
-          >
-            <Stack spacing={3}>
-              <FormControl variant="filled">
-                <InputLabel
-                  id="barrier-select"
-                  style={{color: "white", marginTop: "10px", marginBottom: "10px", marginLeft: "-8 px", textAlign: "left"}}
-                  >
-                  Barrier
-                  </InputLabel>
-                <Slider
-                  sx={{ color: "#FFFFFF" }}
-                  aria-label="barrier-select"
-                  value={barrier}
-                  onChange={handleBarrier}
-                  min={1}
-                  max={3}
-                  defaultValue={1}
-                  valueLabelDisplay="auto"
-                  step={1}
-                />
-                <Typography variant="body2" color="white" align="right" style={{ alignSelf: 'flex-end', marginRight: '0px', marginTop: '-2px' }}>
-          (eV)
-                </Typography>
-              </FormControl>
+        <Content 
+            className="site-layout" 
+            style={{
+                margin: "5%", 
+                maxWidth: "70%", 
+                minWidth: "1000px",
+                border: "1px solid #063970"}}>
 
-              {/* ====== Thickness Slider ====== */}
-              <FormControl variant="filled">
-                <InputLabel
-                  id="thickness-select"
-                  style={{color: "white", marginTop: "10px", marginBottom: "10px", marginLeft: "-8 px", textAlign: "left"}}
-                  >
-                  Thickness
-                  </InputLabel>
-                <Slider
-                  sx={{ color: "#FFFFFF" }}
-                  aria-label="spacing-select"
-                  value = {thickness}
-                  onChange={handleThickness}
-                  min={1}
-                  max={10}
-                  defaultValue={1.0}
-                  valueLabelDisplay="auto"
-                  step={0.1}
-                />
-                <Typography variant="body2" color="white" align="right" style={{ alignSelf: 'flex-end', marginRight: '0px', marginTop: '-2px' }}>
-                  (nm)
-                </Typography>
-              </FormControl>
+        {/* Title for the page */}
+        <CustomPageHeader text="Tunneling" size="h3"/>
+    
+        {/* Content for the page imported from data.json */}
+        <CustomDescriptionBox pageTitle="Tunneling" />
 
-              {/* ====== Wave Select ====== */}
-              <FormControl variant="filled">
-                <InputLabel
-                  id="wave-select"
-                  style={{color: "white", marginTop: "10px", marginBottom: "10px", marginLeft: "-8 px", textAlign: "left"}}
-                  >
-                  Wave number k
-                  </InputLabel>
-                <Slider
-                  sx={{ color: "#FFFFFF" }}
-                  aria-label="spacing-select"
-                  value={wave}
-                  onChange={handleWave}
-                  min={1}
-                  max={10}
-                  defaultValue={1}
-                  valueLabelDisplay="auto"
-                  step={1}
-                />
-                <Typography variant="body2" color="white" align="right" style={{ alignSelf: 'flex-end', marginRight: '0px', marginTop: '-2px' }}>
-                  (nm)
-                  <sup>-1</sup>
-                </Typography>
-              </FormControl>
+        <Card
+            style={{
+                borderRadius: "10px",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingLeft: "2%",
+                border: "1px solid #063970" }}>
+            
+            <CardContent 
+                style={{ 
+                    flex: 1, 
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    border: "1px solid red" }}>
 
-              {/* ====== Submit Button ====== */}
-              {loading ? (
-                <CircularProgress />
-              ) : (
-                <Button
-                  variant="contained"
-                  onClick={handleSubmit}
-                  type="submit"
-                  color="success"
-                >
-                  Generate Model
-                </Button>
-              )}
-            </Stack>
-          </Box>
+                <Box
+                    component="form"
+                    sx={{
+                    "& > :not(style)": { m: 0.5, width: "25ch" },
+                    }}
+                    noValidate
+                    autoComplete="off"
+                    style={horizontal_center} >
 
-          {/* ====== Dashboard ====== */}
-          <Dashboard />
+                    <Stack spacing={5}>
 
-          {/* ====== Snackbar ====== */}
-          <Snackbar
-            open={open}
-            autoHideDuration={6000}
-            onClose={handleClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-          >
-            <Alert
-              onClose={handleClose}
-              severity="success"
-              sx={{ width: "100%" }}
+                        <CustomTitle/>
+
+                        <FormControl variant="filled">
+                            <InputLabel
+                                id="barrier-select"
+                                style={{color: "black", marginTop: "10px", marginBottom: "10px", marginLeft: "8 px", textAlign: "left"}}>
+                                Barrier
+                            </InputLabel>
+                            <Slider
+                                sx={{ color: "#063970" }}
+                                aria-label="barrier-select"
+                                value={barrier}
+                                onChange={handleBarrier}
+                                min={1}
+                                max={3}
+                                defaultValue={1}
+                                valueLabelDisplay="auto"
+                                step={1}/>
+                            <Typography variant="body2" color="white" align="right" style={{ alignSelf: 'flex-end', marginRight: '0px', marginTop: '2px' }}>
+                                (eV)
+                            </Typography>
+                        </FormControl>
+
+                            {/* ====== Thickness Slider ====== */}
+                        <FormControl variant="filled">
+                            <InputLabel
+                                id="thickness-select"
+                                style={{color: "white", marginTop: "10px", marginBottom: "10px", marginLeft: "-8 px", textAlign: "left"}}>
+                                Thickness
+                            </InputLabel>
+                            <Slider
+                                sx={{ color: "#063970" }}
+                                aria-label="spacing-select"
+                                value = {thickness}
+                                onChange={handleThickness}
+                                min={1}
+                                max={10}
+                                defaultValue={1.0}
+                                valueLabelDisplay="auto"
+                                step={0.1}/>
+                            <Typography variant="body2" color="white" align="right" style={{ alignSelf: 'flex-end', marginRight: '0px', marginTop: '-2px' }}>
+                                (nm)
+                            </Typography>
+                        </FormControl>
+
+                        {/* ====== Wave Select ====== */}
+                        <FormControl variant="filled">
+                            <InputLabel
+                                id="wave-select"
+                                style={{color: "white", marginTop: "10px", marginBottom: "10px", marginLeft: "-8 px", textAlign: "left"}}>
+                                Wave number k
+                            </InputLabel>
+                            <Slider
+                                sx={{ color: "#063970" }}
+                                aria-label="spacing-select"
+                                value={wave}
+                                onChange={handleWave}
+                                min={1}
+                                max={10}
+                                defaultValue={1}
+                                valueLabelDisplay="auto"
+                                step={1}/>
+                            <Typography variant="body2" color="white" align="right" style={{ alignSelf: 'flex-end', marginRight: '0px', marginTop: '-2px' }}>
+                                (nm)
+                                <sup>-1</sup>
+                            </Typography>
+                        </FormControl>
+
+                        {/* ====== Submit Button ====== */}
+                        {loading ? (
+                            <CircularProgress />
+                        ) : (
+                            <Button
+                                variant="contained"
+                                onClick={handleSubmit}
+                                type="submit"
+                                color="success" >
+                                Generate Model
+                            </Button>
+                        )}
+                    </Stack>
+
+                </Box>
+
+            </CardContent>
+
+            <CardContent
+                style={{
+                flex: 10,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                }}
             >
-              {success_msg}
-            </Alert>
-          </Snackbar>
-        </Sider>
+                <div style={{ transform: 'scale(0.8)', transformOrigin: 'top left', width: '100%' }}>
+                <CardContent style={{ flex: 1, maxWidth: '80%' }}>
+                    <div 
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            overflow: 'auto',
+                        }}
+                        ref={animationContainerRef}
+                        ></div>
+                </CardContent>
+                </div>
+                
+            </CardContent>
 
-        <Layout style={{ margin: "5%" }}>
-          <Content>
-            <CustomPageHeader text="Tunneling" size="h3"/>
-            <div style={{display: 'flex', justifyContent: 'center'}} ref={animationContainerRef}></div>
-            {/*<iframe src="../../quantum_app_backend/cache/tunneling/probs_1.0_2.0_1.0_3D.html" style={{display: 'flex', justifyContent: 'center'}}/>*/}
-            <CustomDescriptionBox
-                msg={
-                  "Quantum tunneling, also known as tunneling is a quantum mechanical phenomenon whereby a wavefunction can propagate through a potential barrier. The transmission through the barrier can be finite and depends exponentially on the barrier height and barrier width.The non-unitary probability density (previously described in wave functions) of elementary particles causes some expected behaviors observed in classical physics to not fully translate into quantum physics. Elementary particles behave with a degree of unpredictability, with their position being partially decoupled from their “expected” position relative to their probability density and thereby their wave function. As a result, such particles can “tunnel” through potential energy barriers. Imagine throwing a tennis ball at a wall. In classical physics, the tennis ball will bounce off the wall every time. In quantum physics, sometimes your tennis ball will slip part way through the wall before bouncing back and, if the wall is thin and weak enough, it will travel through the wall at a reduced momentum. The ball will also frequently reflect off the wall as expected with the probability of tunneling through the wall being increased if the barrier is physically thinner and if it is weaker, in quantum physics a weaker barrier would have a lower magnitude of potential energy. A particle, or ball, traveling with higher kinetic energy also tends to tunnel more often. Try changing the width and intensity of the barrier as well as the energy of the particle. Does the particle always tunnel? What shape does the probability density function take once it meets the wall? How does it relate to the shape of the probability function as it is propagating?"
-                }
-            />
-          </Content>
-        </Layout>
-      </Layout>
-    </div>
+            
+        </Card>
+        </Content>
+    </Layout>
   );
 };
 

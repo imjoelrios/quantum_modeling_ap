@@ -76,6 +76,11 @@ git update-index --assume-unchanged src/setup/
   - `/src/pages` - Where each sub-page files are located
 - `/backend_functions/` - Contains the backend code for handling requests and generating model gifs
   -  `/backend_functions/model_generators` - Contains the python code used to generate each model, ie `interference.py` or `tunneling.py`
+-  `/src/data/content.json` - Contains the data for each text block on a page.
+   -  If you are generating a new page you may use the component `<CustomDescriptionBox pageTitle=<name>/>`. This will make a box for each item in the pages content. The message will be rendered in markdown style for a better visual experience.
+   -  It can handle image urls with the `imageUrl` parameter or a file in the public folder with `imagePath`
+   -  For example `"imagePath": "/Single_V4.png"`
+   -  For example `"imageUrl": "https://quantumawareness.net/wp-content/uploads/2019/01/doubleslottest-1400x793-71-2.jpg"`
 
 ## Tech Stack
 ### React
