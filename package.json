@@ -24,6 +24,7 @@
     "firebase": "^10.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.4.2",
     "react-scripts": "^5.0.1",
     "styled-components": "^5.3.6",
@@ -56,6 +57,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "@types/react-katex": "^3.0.4",
     "@types/styled-components": "^5.1.26",
     "jest-sonar-reporter": "^2.0.0"
   }

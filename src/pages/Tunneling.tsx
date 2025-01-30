@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 // === UI Components ===
 import {
-  Grid,
   Box,
   Button,
   Stack,
@@ -11,13 +10,15 @@ import {
   InputLabel,
   FormControl,
   Slider,
-  Typography
+  Typography,
+  CardContent,
+  Card,
+  AlertProps
 } from "@mui/material";
 import CircularProgress from '@mui/joy/CircularProgress';
 import { Layout } from "antd";
 import "antd/dist/antd.min.css";
 import host from "../setup/host";
-
 
 // === Custom Components ===
 import {
@@ -42,27 +43,25 @@ const Tunneling = () => {
   const [barrier, setBarrier] = useState<number>(1);
   const [thickness, setThickness] = useState<number>(1.0);
   const [wave, setWave] = useState<number>(1);
-  // const [tunneling_img2d_base64, set_Tunneling_img2d_base64] = useState(base64Text2d);
-  // const [tunneling_img3d_base64, set_Tunneling_img3d_base64] = useState(base64Text3d);
   const [animationJsHtml, setAnimationJsHtml] = useState('');
   const animationContainerRef = useRef<HTMLDivElement>(null);
   const [barrierSliderMoved, setBarrierSliderMoved] = useState(false);
   const [thicknessSliderMoved, setThicknessSliderMoved] = useState(false);
   const [waveSliderMoved, setWaveSliderMoved] = useState(false);
-  const [success_msg, set_Success_Msg] = useState(
-    "Tunneling model generated with barrier = " + barrier.toString() + ", thickness = " + thickness.toString() + ", and wave = " + wave.toString() + "!"
-  );
-  const [open, setOpenSnackbar] = useState(false);
+  const [snackbar_msg, setSnackbarMessage] = useState("Default tunneling model generated!");
+  const [severity, setSeverity] = useState<AlertProps['severity']>('success');
+  const [openSnackBar, setOpenSnackbar] = useState(false);
 
   async function getGifFromServer(request_url: string) {
     try {
       const response = await fetch(request_url, {method: 'GET'});
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        console.error("Error fetching animation from server");
+        setSeverity('error');
+        return null;
       }
-      const responseData = await response.json();
-      // console.log("responseData: ", responseData);
-      setAnimationJsHtml(responseData.GifRes); // Adjust based on your API response structure
+      const responseData = await response.text();
+      setAnimationJsHtml(responseData); // Adjust based on your API response structure
       return response.ok;
     } catch (error) {
       console.error("Error fetching animation from server:", error);
@@ -78,17 +77,17 @@ const Tunneling = () => {
         .then((response) => response.text())
         .then((text) => {
           setAnimationJsHtml(text);
-        console.log(text)
         });
       } catch (error) {
-        console.error('Failed to load default HTML content:', error);
+        setSnackbarMessage("Failed to load default model.");
+        setSeverity('error');
       }
     };
 
     loadDefaultHtml();
   }, []);
 
-  // Your existing useEffect for handling animationJsHtml changes
+  // Existing useEffect for handling animationJsHtml changes
   useEffect(() => {
     if (animationJsHtml && animationContainerRef.current) {
       const container = animationContainerRef.current;
@@ -104,6 +103,12 @@ const Tunneling = () => {
       });
     }
   }, [animationJsHtml]);
+
+  useEffect(() => {
+    if (snackbar_msg) {
+      setOpenSnackbar(true);
+    }
+  }, [snackbar_msg]);
 
   // ========= handle functions =========
   const handleClose = (
@@ -136,9 +141,6 @@ const Tunneling = () => {
     let barrier_str = barrier.toString();
     let thickness_str = thickness.toString();
     let wave_str = wave.toString();
-    console.log("barrier:", barrier_str);
-    console.log("thickness:", thickness_str);
-    console.log("wave:", wave_str);
 
     // if no input, set to default
     if (barrier_str === "") {
@@ -161,7 +163,7 @@ const Tunneling = () => {
       setLoading(true);
       const gifData = await getGifFromServer(final_url);
       if (gifData) {
-        set_Success_Msg(
+        setSnackbarMessage(
           "Tunneling model generated with barrier = " +
             barrier_str +
             ", thickness = " +
@@ -170,11 +172,14 @@ const Tunneling = () => {
             wave_str +
             "!"
         );
-        setLoading(false);
-        setBarrierSliderMoved(false);
-        setThicknessSliderMoved(false);
-        setWaveSliderMoved(false);
       }
+      else {
+        setSnackbarMessage("Failed to generate model.");
+      }
+      setLoading(false);
+      setBarrierSliderMoved(false);
+      setThicknessSliderMoved(false);
+      setWaveSliderMoved(false);
     }
     setOpenSnackbar(true); // open snackbar
   }
@@ -183,17 +188,22 @@ const Tunneling = () => {
   return (
     <div>
       <Layout style={{ minHeight: "100vh" }}>
-        {/* ======================== Sider ======================== */}
-        <Sider
-          // collapsible
-          // collapsed={collapsed}
-          // onCollapse={(value) => setCollapsed(value)}
-          style={{ padding: "1%" }}
-          width={230}
-        >
-          <CustomTitle />
-
-          <Box
+        <Layout style={{ margin: '5%' }}>
+          <Content>
+            <CustomPageHeader text="Tunneling" size="h3"/>
+            <CustomDescriptionBox pageTitle="tunneling" />
+          </Content>
+          <Card
+      style={{
+        borderRadius: "10px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingLeft: "5%",
+      }}
+    >
+      <CardContent style={{ flex: 1, maxWidth: "80%" }}>
+      <Box
             component="form"
             sx={{
               "& > :not(style)": { m: 0.5, width: "25ch" },
@@ -202,11 +212,12 @@ const Tunneling = () => {
             autoComplete="off"
             style={horizontal_center}
           >
-            <Stack spacing={3}>
-              <FormControl variant="filled">
+          <Stack spacing={5}>
+          <CustomTitle/>
+          <FormControl variant="filled">
                 <InputLabel
                   id="barrier-select"
-                  style={{color: "white", marginTop: "10px", marginBottom: "10px", marginLeft: "-8 px", textAlign: "left"}}
+                  style={{color: "black", marginTop: "10px", marginBottom: "10px", marginLeft: "8 px", textAlign: "left"}}
                   >
                   Barrier
                   </InputLabel>
@@ -221,7 +232,7 @@ const Tunneling = () => {
                   valueLabelDisplay="auto"
                   step={1}
                 />
-                <Typography variant="body2" color="white" align="right" style={{ alignSelf: 'flex-end', marginRight: '0px', marginTop: '-2px' }}>
+                <Typography variant="body2" color="white" align="right" style={{ alignSelf: 'flex-end', marginRight: '0px', marginTop: '2px' }}>
           (eV)
                 </Typography>
               </FormControl>
@@ -288,40 +299,31 @@ const Tunneling = () => {
                   Generate Model
                 </Button>
               )}
-            </Stack>
-          </Box>
+          </Stack>
+        </Box>
+      </CardContent>
 
-          {/* ====== Dashboard ====== */}
-          <Dashboard />
-
-          {/* ====== Snackbar ====== */}
-          <Snackbar
-            open={open}
-            autoHideDuration={6000}
-            onClose={handleClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-          >
-            <Alert
-              onClose={handleClose}
-              severity="success"
-              sx={{ width: "100%" }}
-            >
-              {success_msg}
-            </Alert>
-          </Snackbar>
-        </Sider>
-
-        <Layout style={{ margin: "5%" }}>
-          <Content>
-            <CustomPageHeader text="Tunneling" size="h3"/>
-            <div style={{display: 'flex', justifyContent: 'center'}} ref={animationContainerRef}></div>
-            {/*<iframe src="../../quantum_app_backend/cache/tunneling/probs_1.0_2.0_1.0_3D.html" style={{display: 'flex', justifyContent: 'center'}}/>*/}
-            <CustomDescriptionBox
-                msg={
-                  "Quantum tunneling, also known as tunneling is a quantum mechanical phenomenon whereby a wavefunction can propagate through a potential barrier. The transmission through the barrier can be finite and depends exponentially on the barrier height and barrier width.The non-unitary probability density (previously described in wave functions) of elementary particles causes some expected behaviors observed in classical physics to not fully translate into quantum physics. Elementary particles behave with a degree of unpredictability, with their position being partially decoupled from their “expected” position relative to their probability density and thereby their wave function. As a result, such particles can “tunnel” through potential energy barriers. Imagine throwing a tennis ball at a wall. In classical physics, the tennis ball will bounce off the wall every time. In quantum physics, sometimes your tennis ball will slip part way through the wall before bouncing back and, if the wall is thin and weak enough, it will travel through the wall at a reduced momentum. The ball will also frequently reflect off the wall as expected with the probability of tunneling through the wall being increased if the barrier is physically thinner and if it is weaker, in quantum physics a weaker barrier would have a lower magnitude of potential energy. A particle, or ball, traveling with higher kinetic energy also tends to tunnel more often. Try changing the width and intensity of the barrier as well as the energy of the particle. Does the particle always tunnel? What shape does the probability density function take once it meets the wall? How does it relate to the shape of the probability function as it is propagating?"
-                }
-            />
-          </Content>
+      <CardContent
+        style={{
+          flex: 3,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <div style={{display: 'flex', justifyContent: 'center'}} ref={animationContainerRef}></div>
+      </CardContent>
+      <Snackbar
+        open={openSnackBar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setOpenSnackbar(false)} severity={severity}>
+          {snackbar_msg}
+        </Alert>
+      </Snackbar>
+    </Card>
         </Layout>
       </Layout>
     </div>

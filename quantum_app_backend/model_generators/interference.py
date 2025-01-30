@@ -6,6 +6,7 @@ from scipy.sparse import linalg as ln
 from scipy.sparse import csc_matrix
 from pathlib import Path
 import portalocker
+import os
 
 
 def calculate_center_of_mass(x, psi):
@@ -158,8 +159,9 @@ class Animator3D:
         anim = FuncAnimation(self.fig, self.update, interval=1, frames=np.arange(0, self.wave_packet.Nt, 2), repeat=False,
                              blit=0)
         anim_js = anim.to_jshtml(fps=60)
-        if not Path(f'cache/interference/probs_{self.wave_packet.k0}_{self.wave_packet.a}_{self.wave_packet.s}_3D.html').exists():
-            with open(f'cache/interference/probs_{self.wave_packet.k0}_{self.wave_packet.a}_{self.wave_packet.s}_3D.html', "w") as f:
+        path = os.path.abspath(os.path.join(f"quantum_app_backend/cache/interference/probs_{self.wave_packet.k0}_{self.wave_packet.a}_{self.wave_packet.s}_3D.html"))
+        if not Path(path).exists():
+            with open(path, "w", encoding="utf-8") as f:
                 portalocker.lock(f, portalocker.LOCK_EX)
                 f.write(anim_js)
         return anim_js

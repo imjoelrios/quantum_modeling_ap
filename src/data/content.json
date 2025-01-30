@@ -1,0 +1,64 @@
+{
+    "tunneling": [
+        {
+        "title": "What is tunneling?",
+        "imageUrl": "https://www.wikihow.com/images/thumb/3/32/Play-Wall-Ball-Step-9-Version-2.jpg/v4-460px-Play-Wall-Ball-Step-9-Version-2.jpg.webp",
+        "msg": "Imagine you're hitting a ball at a wall. Normally, the ball would just bounce back, right? But in quantum physics, sometimes the ball can go through the wall, even if the wall is solid! This is a concept called tunneling."
+        },
+        {
+        "title": "Why do particles act so strange?",
+        "msg": "Particles, like tiny pieces of matter, don't always act the way we expect them to. In regular physics, like with balls or cars, we can predict where things will go. But in quantum physics, these tiny particles are super unpredictable! Their position is a bit fuzzy, and sometimes they show up where you'd never expect them to. This is why they can tunnel through barriers."
+        },
+        {
+        "title": "What affects whether the ball goes through the wall?",
+        "msg": "There are a few things that make tunneling easier for particles:\n- If the wall (or barrier) is thinner.\n- If the wall is weaker (lower energy).\n- If the particle is moving faster (has more energy).\nWhen these things happen, the particle (or tennis ball) is more likely to go through the wall!"
+        },
+        {
+        "title": "Try it out!",
+        "msg": "Change the thickness and strength of the barrier, and adjust the energy of the particle. Does the particle always tunnel through? What does the pattern of the particle's behavior look like when it reaches the barrier? How does it change as the particle moves? See what happens!"
+        }
+    ],
+    "interference": [
+        {
+        "title": "What is interference?",
+        "imageUrl": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjzBWFVf3m3-Wh1k4q9mNAxbDcDTS_4qEiZ7SK_dG2iQO9dUP6r4IAq8eXiK0utCTeafofhwb8gvWpt8J8oTziDUq3EnoTYbpvLASi8gnrW3E5k59PnSDh48JGNiY5sjj_l9BjOGiOqgY-d/?imgmax=800",
+        "msg": "In quantum physics, tiny particles can be in more than one place at once! This idea is called \"superposition.\" Not only that, but sometimes these particles, like light particles (called photons), can actually interfere with themselves, just like two waves crossing each other in water!"
+        },
+        {
+        "title": "Are quantum particles waves?",
+        "msg": "Particles in quantum physics don't act like everyday objects. These tiny particles, like electrons or photons, act like both **particles** (solid objects) and **waves** (like water waves). This special behavior is called **wave-particle duality**. Scientists use something called the **DeBroglie wavelength** to figure out how wavy a particle is. The smaller the particle's energy, the more like a wave it behaves!"
+        },
+        {
+        "title": "How is wavelength calculated?",
+        "msg": "Scientists use a formula to find out how wavy a particle is. It looks like this:  \n$$ F = p/h $$  \nBut what does that mean? It means that if a particle is moving really fast (high momentum), its wavelength becomes super tiny! But for small particles, like electrons or photons, the waves are bigger and easier to see."
+        },
+        {
+        "title": "The Double Slot Experiment",
+        "imageUrl": "https://quantumawareness.net/wp-content/uploads/2019/01/doubleslottest-1400x793-71-2.jpg",
+        "msg": "Here’s a cool experiment that shows how photons (light particles) act like both particles and waves. You’d think you’d see two lines on the other side, right? But what you actually see is a pattern of light and dark lines, like waves crossing in water!  \n\nThis is because the photons aren’t just acting like particles. They’re also behaving like waves that **interfere** with each other, creating this special pattern."
+        },
+        {
+        "title": "Try it out!",
+        "msg": "Change the distance between the slits, or change how much energy the wave has.  \n- What happens to the pattern on the wall?  \n- Does the wave’s energy change the spacing of the light and dark lines?  \n\nTry it out and see how waves and particles are both part of the same strange quantum world!"
+        }
+    ],
+    "spin": [
+        {
+        "title": "What is qubit and a \"spin\"?",
+        "msg": "In quantum computers, we use something called qubits to store information. Unlike regular computer bits (which are either 0 or 1), qubits can be a mix of both at the same time! One way we can control a qubit is by using the **spin** of a tiny particle, like an electron. Imagine the electron spinning like a top—this spin helps us control how the qubit behaves."
+        },
+        {
+        "title": "How does spin change?",
+        "msg": "To control the spin of a particle, we apply a **magnetic field**. This makes the particle spin around in a circle! We measure how much it spins and use that to decide how well our quantum computer is working. The goal is to rotate the spin by just the right amount, which we call a **quantum gate**."
+        },
+        {
+        "title": "The Bloch Sphere",
+        "imagePath": "/Single_V4.png",
+        "msg": "We can picture the spin of an electron using a model called the **Bloch sphere**. It’s like a globe, and the spin is a point on the surface of the globe that moves around as the magnetic field changes. By looking at the Bloch sphere, we can see exactly how the spin is moving!"
+        },
+        {
+        "title": "Try it out!",
+        "msg": "Now it’s your turn to explore! In this experiment, you can adjust the magnetic field and see how it affects the spin of a qubit. Watch how the qubit’s spin changes on the Bloch sphere. Can you find the right amount of spin for the quantum gate?"
+        }
+    ]
+}
