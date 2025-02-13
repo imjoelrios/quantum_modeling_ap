@@ -7,7 +7,13 @@ from scipy.sparse import linalg as ln
 from scipy.sparse import csc_matrix
 from pathlib import Path
 import portalocker
-
+import os
+import time
+import sys
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+from db import MongoConnector
 
 def calculate_center_of_mass(x, psi):
     density = np.abs(psi)**2
@@ -116,7 +122,7 @@ class Animator3D:
     def __init__(self, wave_packet):
         self.wave_packet = wave_packet
         self.x_ticks = np.linspace(0, self.wave_packet.L, self.wave_packet.Nx - 2)
-        self.fig = plt.figure(figsize=(12, 6))
+        self.fig = plt.figure(figsize=(9, 4))
         self.ax_top = self.fig.add_subplot(121, xlim=(0, self.wave_packet.L), ylim=(0, self.wave_packet.L))
 
         self.img_top = self.ax_top.imshow(self.wave_packet.probs[0], extent=[0, self.wave_packet.L, 0, self.wave_packet.L],
@@ -156,18 +162,36 @@ class Animator3D:
         return self.img_top, self.line,
 
     def animate3D(self):
-        anim = FuncAnimation(self.fig, self.update, interval=1, frames=np.arange(0, self.wave_packet.Nt, 2), repeat=False,
-                             blit=0)
-        anim_js = anim.to_jshtml(fps=60)
-        if not Path(f'cache/tunneling/probs_{self.wave_packet.k0}_{self.wave_packet.v_max}_{self.wave_packet.w}_3D.html').exists():
-            with open(f'cache/tunneling/probs_{self.wave_packet.k0}_{self.wave_packet.v_max}_{self.wave_packet.w}_3D.html', "w") as f:
-                portalocker.lock(f, portalocker.LOCK_EX)
-                f.write(anim_js)
+        anim = FuncAnimation(self.fig, self.update, interval=1, frames=np.arange(0, self.wave_packet.Nt - 100, 10), repeat=False, blit=0)
+        anim_js = anim.to_jshtml(fps=30)
+
+        ## No longer need to save the file locally
+        # path = os.path.abspath(os.path.join(f"quantum_app_backend/cache/tunneling/probs_{self.wave_packet.k0}_{self.wave_packet.v_max}_{self.wave_packet.w}_3D.html"))
+        
+        # if not Path(path).exists():
+        #     with open(path, "w", encoding="utf-8") as f:
+        #         portalocker.lock(f, portalocker.LOCK_EX)
+        #         f.write(anim_js)
+        
         return anim_js
 
-
+# Driver to upload tunneling models to MongoDB
 if __name__ == "__main__":
-    wave_packet = Wave_Packet3D(barrier_width=1, barrier_height=10, k0=2)
-
+    mongo = MongoConnector()
+    wave_packet = Wave_Packet3D(barrier_width=1, barrier_height=3, k0=2)
     animator = Animator3D(wave_packet)
-    test = animator.animate3D()
+
+    parameters = {'momentum': wave_packet.k0, 'barrier': wave_packet.v_max, 'width': wave_packet.w}
+    mongo.set_collection('tunneling')
+
+    start_time = time.time()
+    
+    anim_js = animator.animate3D()
+    mongo.upload_model(parameters, anim_js)
+
+    end_time = time.time()
+
+    print('Tunneling model inserted successfully')
+    print(f"Time taken: {end_time - start_time}")
+
+    mongo.close()

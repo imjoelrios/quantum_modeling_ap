@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request
+import flask
+from flask import Flask, jsonify
 from flask_restx import Api
 from flask_cors import CORS
 from model_generators.tunneling import Wave_Packet3D as t_wp, Animator3D as t_ani
@@ -6,10 +7,7 @@ from model_generators.interference import Wave_Packet3D as i_wp, Animator3D as i
 from model_generators.Qgate1 import Qgate1
 import matplotlib.pyplot as plt
 import time
-import base64
-import os
-from pathlib import Path
-import portalocker
+from db import MongoConnector
 
 #set swagger info
 api: Api = Api(
@@ -20,68 +18,45 @@ api: Api = Api(
 )
 
 app = Flask(__name__)
-
 api.init_app(app)
-
 CORS(app, resources={r"/*": {"origins": "*"}})
+mongo = MongoConnector()
 
 @app.route('/receive_data/tunneling/<barrier>/<width>/<momentum>', methods=['GET'])
 def Qtunneling(barrier, width, momentum):
+    print("You evoked the tunneling API successfully")
+    
     barrier = float(barrier)
     width = float(width)
     momentum = float(momentum)
 
-    print("You evoked the API successfully")
-    if Path(f'cache/tunneling/probs_{momentum}_{barrier}_{width}_3D.html').exists():
-        print(f'cache/tunneling/probs_{momentum}_{barrier}_{width}_3D.html')
-        with open(f'cache/tunneling/probs_{momentum}_{barrier}_{width}_3D.html',
-                  "r") as f:
-            portalocker.lock(f, portalocker.LOCK_SH)
-            GifRes = f.read()
+    mongo.set_collection('tunneling')
+
+    parameters = {'momentum': momentum, 'barrier': barrier, 'width': width}
+
+    tunneling_model = mongo.get(parameters)
+    if tunneling_model:
+        return tunneling_model
     else:
-        plt.close('all')
-        plt.switch_backend('Agg')
-
-        start_3d_time = time.time()  # Record the start time
-        wave_packet3D = t_wp(barrier_width=width, barrier_height=barrier, k0=momentum)
-        animator = t_ani(wave_packet3D)
-        GifRes = animator.animate3D()
-
-        end_3d_time = time.time()    # Record the end time
-        elapsed_3d_time = end_3d_time - start_3d_time
-        print(f"Elapsed 3D generator time: {elapsed_3d_time} seconds")
-
-    return {'GifRes': GifRes}
+        return jsonify({'error': 'Model not found'}), 404
 
 
 @app.route('/receive_data/interference/<spacing>/<slit_separation>/<int:momentum>', methods=['GET'])
 def Qinterference(spacing, slit_separation, momentum):
+    print("You evoked the interference API successfully")
+
+    momentum = float(momentum)
     spacing = float(spacing)
     slit_separation = float(slit_separation)
 
-    print("You evoked the API successfully")
+    mongo.set_collection('interference')
     
-    if Path(f'cache/interference/probs_{momentum}_{spacing}_{slit_separation}_3D.html').exists():
-        print(f'cache/interference/probs_{momentum}_{spacing}_{slit_separation}_3D.html')
-        with open(f'cache/interference/probs_{momentum}_{spacing}_{slit_separation}_3D.html',
-                  "r") as f:
-            portalocker.lock(f, portalocker.LOCK_SH)
-            GifRes = f.read()
+    parameters = {'momentum': momentum, 'spacing': spacing, 'slit_separation': slit_separation}
+    interference_model = mongo.get(parameters)
+    if interference_model:
+        return interference_model
     else:
-        plt.close('all')
-        plt.switch_backend('Agg')
-
-        start_3d_time = time.time()
-        wave_packet3D = i_wp(slit_space=spacing, slit_sep=slit_separation, k0=momentum)
-        animator3D = i_ani(wave_packet3D)
-        GifRes = animator3D.animate3D()
-    
-        end_3d_time = time.time()  # Record the end time
-        elapsed_3d_time = end_3d_time - start_3d_time
-        print(f"Elapsed 3D generator time: {elapsed_3d_time} seconds")
-
-    return {'GifRes': GifRes}
-
+        return jsonify({'error': 'Model not found'}), 404
 
 @app.route('/receive_data/evotrace/<int:gate>/<int:init_state>/<int:mag>/<t2>', methods=['GET'])
 def Qtrace(gate, init_state, mag, t2):
@@ -101,15 +76,7 @@ def Qtrace(gate, init_state, mag, t2):
 
     return {'GifRes': GifRes}
     
-
-@app.route('/hello', methods=['GET', 'POST'])
-def welcome():
-    return "Hello World!"
-
-
-#blind namespace to swagger api page
 if __name__ == '__main__':
     app.debug = True
-
-    #run backend server at port 5001
+    #run backend server at port 3001
     app.run(host="0.0.0.0", port=3001, threaded=False, debug=True)

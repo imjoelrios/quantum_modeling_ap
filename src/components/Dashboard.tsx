@@ -10,8 +10,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 export default function Dashboard() {
   const card_style = {
     backgroundColor: "rgba(52, 52, 52, 0)",
-    border: "1px solid #FFFFFF",
-    boxShadow: "0 0 5px -1px rgba(0,0,0,0.2)",
   };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -25,7 +23,7 @@ export default function Dashboard() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "30%" }}>
-      <Card style={card_style}>
+      <Card>
         <Button
           id="fade-button"
           aria-controls={open ? "fade-menu" : undefined}
@@ -34,7 +32,7 @@ export default function Dashboard() {
           onClick={handleClick}
           endIcon={<KeyboardArrowDownIcon />}
           style={{
-            color: "white",
+            color: "black",
             fontWeight: "bolder",
             textTransform: "none",
             fontSize: 20,
@@ -72,14 +70,6 @@ export default function Dashboard() {
           {" "}
           Spin Trace Evolution{" "}
         </MenuItem>
-        {/* <MenuItem component={Link} to="/wavefunction">
-          {" "}
-          Wavefunction{" "}
-        </MenuItem> */}
-        {/* <MenuItem component={Link} to="/interference">
-          {" "}
-          Interference{" "}
-        </MenuItem> */}
       </Menu>
     </div>
   );
